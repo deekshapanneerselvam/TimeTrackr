@@ -14,9 +14,11 @@ mongoose.connect('mongodb://localhost:27017/Timesheet_Track', { useNewUrlParser:
 
 // Import routes here
 const authRoutes = require('./routes/auth');
-const empRoutes= require('./routes/employeeRoutes');
+const empRoutes= require('./routes/employee.routes');
+const projectRoute=require('./routes/project.routes');
 app.use('/api/auth', authRoutes);
 app.use('/api/employee',empRoutes);
+app.use('/api/projects',projectRoute);
 
 
 app.listen(PORT, () => {
