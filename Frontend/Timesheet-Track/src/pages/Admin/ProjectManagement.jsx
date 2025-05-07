@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate
 
 const ProjectManagement = () => {
   const [projects, setProjects] = useState([]);
@@ -9,6 +10,7 @@ const ProjectManagement = () => {
     client: ''
   });
   const [formErrors, setFormErrors] = useState({});
+  const navigate = useNavigate();  // Initialize useNavigate
 
   const fetchProjects = async () => {
     try {
@@ -62,6 +64,10 @@ const ProjectManagement = () => {
     } catch (err) {
       console.error('Error adding project:', err);
     }
+  };
+
+  const handleRowClick = (id) => {
+    navigate(`/admin/project/${id}`);  // Navigate to the project details page
   };
 
   return (
@@ -154,7 +160,7 @@ const ProjectManagement = () => {
         <tbody>
           {projects.length > 0 ? (
             projects.map((proj, index) => (
-              <tr key={index}>
+              <tr key={index} onClick={() => handleRowClick(proj.project_id)} style={{ cursor: 'pointer' }}>
                 <td>{proj.project_id}</td>
                 <td>{proj.project_name}</td>
                 <td>{proj.client}</td>

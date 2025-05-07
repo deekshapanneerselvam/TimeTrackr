@@ -21,6 +21,20 @@ const employeeSchema = new Schema(
       type: String,
       required: true, 
     },
+
+    assignedProjects: [
+      {
+        projectId: {
+          type: String,
+          ref: 'Project', // Reference to the Project model
+          required: true,
+        },
+        projectName: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     
     
   },

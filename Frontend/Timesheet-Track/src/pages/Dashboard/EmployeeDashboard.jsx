@@ -1,23 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaTasks, FaClock, FaPaperPlane, FaCheckCircle, FaUserCircle } from 'react-icons/fa';
-
+import { FaClock, FaProjectDiagram, FaCheckCircle, FaUserCircle } from 'react-icons/fa';
+import Timesheet from '../Employee/Timesheet'
 const EmployeeDashboard = () => {
-  const [activeTab, setActiveTab] = useState('logTasks');
+  const [activeTab, setActiveTab] = useState('timesheet');
   const navigate = useNavigate();
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'logTasks':
-        return <h2>📝 Log Daily Tasks</h2>;
-      case 'editTimesheet':
-        return <h2>📅 Edit / View Own Timesheets</h2>;
-      case 'submitTimesheet':
-        return <h2>📤 Submit Timesheet</h2>;
+      case 'timesheet':
+        return <Timesheet />;
+      case 'projects':
+        return <h2>📁 Assigned Projects</h2>;
       case 'status':
-        return <h2>📈 Timesheet Status (Approved / Pending / Rejected)</h2>;
-      case 'reminders':
-        return <h2>📬 Email Reminders</h2>;
+        return <h2>📊 Timesheet Status</h2>;
       case 'profile':
         return <h2>👤 Employee Profile</h2>;
       default:
@@ -35,11 +31,9 @@ const EmployeeDashboard = () => {
       <aside style={styles.sidebar}>
         <h1 style={styles.logo}>⏱ TimeTrackr</h1>
         <nav>
-          <SidebarItem icon={<FaTasks />} label="Log Tasks" tab="logTasks" activeTab={activeTab} setActiveTab={setActiveTab} />
-          <SidebarItem icon={<FaClock />} label="Edit/View Timesheet" tab="editTimesheet" activeTab={activeTab} setActiveTab={setActiveTab} />
-          <SidebarItem icon={<FaPaperPlane />} label="Submit Timesheet" tab="submitTimesheet" activeTab={activeTab} setActiveTab={setActiveTab} />
+          <SidebarItem icon={<FaClock />} label="Timesheet" tab="timesheet" activeTab={activeTab} setActiveTab={setActiveTab} />
+          <SidebarItem icon={<FaProjectDiagram />} label="Projects" tab="projects" activeTab={activeTab} setActiveTab={setActiveTab} />
           <SidebarItem icon={<FaCheckCircle />} label="Status" tab="status" activeTab={activeTab} setActiveTab={setActiveTab} />
-          <SidebarItem icon={<FaUserCircle />} label="Reminders" tab="reminders" activeTab={activeTab} setActiveTab={setActiveTab} />
           <SidebarItem icon={<FaUserCircle />} label="Profile" tab="profile" activeTab={activeTab} setActiveTab={setActiveTab} />
         </nav>
       </aside>
@@ -56,7 +50,7 @@ const EmployeeDashboard = () => {
         {/* Main Content */}
         <main style={styles.mainContent}>
           {renderContent()}
-          <p style={{ marginTop: 10, color: '#6b7280' }}>This is the {activeTab} section.</p>
+          <p style={{ marginTop: 10, color: '#6b7280' }}>You are viewing the {activeTab} section.</p>
         </main>
       </div>
     </div>

@@ -26,6 +26,31 @@ exports.createEmployee = async (req, res) => {
   }
 };
 
+exports.assignProjectToEmployee = async (req, res) => {
+  const { employeeId } = req.params;
+  const { projectId, projectName } = req.body;
+
+  try {
+    // Find the employee
+    const employee = await Employee.findOne({ employee_id: employeeId });
+
+    if (!employee) {
+      return res.status(404).json({ success: false, message: 'Employee not found' });
+    }
+
+    // Add the project to the assignedProjects array
+    employee.assignedProjects.push({ projectId, projectName });
+
+    // Save the updated employee
+    await employee.save();
+
+    return res.json({ success: true, message: 'Project assigned successfully' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: 'Error assigning project' });
+  }
+};
+
 // Get all employees
 exports.getAllEmployees = async (req, res) => {
   try {
