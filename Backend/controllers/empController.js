@@ -4,14 +4,14 @@ const Employee = require('../models/employee.model');
 // Add a new employee
 exports.createEmployee = async (req, res) => {
   try {
-    const { employee_id , name, email, department} = req.body;
+    const { employee_id , name, email, role} = req.body;
 
     // Create a new employee object
     const newEmployee = new Employee({
       employee_id,
       name,
       email,
-      department
+      role
 
     });
 
@@ -40,12 +40,12 @@ exports.getAllEmployees = async (req, res) => {
 
 exports.updateEmployee = async (req, res) => {
   const { id } = req.params; // This should be MongoDB's _id
-  const { name, email, department } = req.body;
+  const { name, email, role } = req.body;
 
   try {
     const updatedEmployee = await Employee.findByIdAndUpdate(
       id,
-      { name, email, department },
+      { name, email, role },
       { new: true }
     );
 

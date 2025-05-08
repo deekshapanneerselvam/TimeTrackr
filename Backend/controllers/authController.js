@@ -1,6 +1,6 @@
 // controllers/authController.js
 const bcrypt = require('bcryptjs');
-const User = require('../models/user');
+const User = require('../models/employee.model');
 
 // Register user
 exports.signup = async (req, res) => {
@@ -33,38 +33,41 @@ exports.signup = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, employee_id, role } = req.body;
+  console.log(req.body);
 
   try {
-    // 1. Check if the user exists
-    const user = await User.findOne({ email });
+    // 1. Find employee by email
+    const employee = await User.findOne({ email });
+    console.log(employee);
 
-    if (!user) {
+
+    if (!employee) {
       return res.status(400).json({ message: 'User does not exist' });
     }
 
-    // 2. Check if role matches
-    if (user.role.toLowerCase() !== role.toLowerCase()) {
-      return res.status(400).json({ message: `Role mismatch. You are registered as ${user.role}` });
+    // 2. Match employee_id
+    if (employee.employee_id !== employee_id) {
+      return res.status(400).json({ message: 'Incorrect Employee ID' });
     }
 
-    // 3. Validate password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).json({ message: 'Incorrect password' });
+    // 3. Match role
+    if (employee.role.toLowerCase() !== role.toLowerCase()) {
+      return res.status(400).json({ message: `Role mismatch. You are registered as ${employee.role}` });
     }
 
-    // 4. Login successful
-    res.status(200).json({
+    // 4. Login success
+    return res.status(200).json({
       message: 'Login successful',
       user: {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
+        id: employee._id,
+        name: employee.name,
+        email: employee.email,
+        role: employee.role,
+        employee_id: employee.employee_id,
       },
     });
   } catch (error) {
-    res.status(500).json({ message: 'Login failed', error: error.message });
+    return res.status(500).json({ message: 'Login failed', error: error.message });
   }
 };

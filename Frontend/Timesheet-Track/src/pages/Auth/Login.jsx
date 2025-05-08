@@ -5,8 +5,7 @@ import axios from 'axios';
 export default function LoginPage() {
   const [role, setRole] = useState('Employee');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [employeeId, setEmployeeId] = useState('');
   const [mounted, setMounted] = useState(false);
 
   const navigate = useNavigate();
@@ -17,19 +16,17 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', {
         email,
-        password,
+        employee_id: employeeId,
         role
       });
 
       const { message, user } = response.data;
       console.log(message);
 
-      // Role-based redirection
-      const trimmedRole = role.trim().toLowerCase();
+      const trimmedRole = user.role.trim().toLowerCase();
       if (trimmedRole === 'employee') {
         navigate('/employee');
       } else if (trimmedRole === 'manager') {
@@ -55,11 +52,7 @@ export default function LoginPage() {
 
         <form className="form" onSubmit={handleSubmit}>
           <label className="label">Select Role</label>
-          <select
-            className="select"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
+          <select className="select" value={role} onChange={(e) => setRole(e.target.value)}>
             <option>Employee</option>
             <option>Manager</option>
             <option>Admin</option>
@@ -75,37 +68,17 @@ export default function LoginPage() {
             required
           />
 
-          <label className="label">Password</label>
-          <div className="passwordWrapper">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input"
-              required
-            />
-            <span
-              className="eyeIcon"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              👁️
-            </span>
-          </div>
+          <label className="label">Employee ID</label>
+          <input
+            type="text"
+            placeholder="Enter your employee ID"
+            value={employeeId}
+            onChange={(e) => setEmployeeId(e.target.value)}
+            className="input"
+            required
+          />
 
-          <div className="options">
-            <label className="rememberMe">
-              <input type="checkbox" />
-              Remember me
-            </label>
-            <Link to="#" className="forgotPassword">
-              Forgot Password?
-            </Link>
-          </div>
-
-          <button type="submit" className="loginBtn">
-            Login
-          </button>
+          <button type="submit" className="loginBtn">Login</button>
         </form>
 
         <p className="signUpPrompt">
@@ -124,7 +97,6 @@ export default function LoginPage() {
           height: 100vh;
           background: #f7f9fc;
         }
-
         .loginContainer {
           width: 100%;
           max-width: 400px;
@@ -134,41 +106,34 @@ export default function LoginPage() {
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
           text-align: center;
         }
-
         .iconWrapper {
           margin-bottom: 16px;
         }
-
         .clockIcon {
           font-size: 36px;
         }
-
         .heading {
           font-size: 22px;
           font-weight: 600;
           margin-bottom: 6px;
           color: #1f2937;
         }
-
         .subheading {
           font-size: 14px;
           color: #6b7280;
           margin-bottom: 20px;
         }
-
         .form {
           display: flex;
           flex-direction: column;
           text-align: left;
         }
-
         .label {
           font-size: 14px;
           font-weight: 500;
           margin: 12px 0 6px;
           color: #374151;
         }
-
         .select,
         .input {
           padding: 10px 12px;
@@ -179,45 +144,9 @@ export default function LoginPage() {
           outline: none;
           box-sizing: border-box;
         }
-
         .select {
           cursor: pointer;
         }
-
-        .passwordWrapper {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-
-        .eyeIcon {
-          position: absolute;
-          right: 12px;
-          cursor: pointer;
-          font-size: 16px;
-        }
-
-        .options {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin: 16px 0;
-        }
-
-        .rememberMe {
-          font-size: 13px;
-          color: #374151;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-
-        .forgotPassword {
-          font-size: 13px;
-          color: #7e5bef;
-          text-decoration: none;
-        }
-
         .loginBtn {
           background-color: #7e5bef;
           color: #fff;
@@ -226,21 +155,18 @@ export default function LoginPage() {
           font-size: 15px;
           border-radius: 8px;
           cursor: pointer;
-          margin-top: 8px;
+          margin-top: 16px;
           transition: background 0.3s ease;
         }
-
         .loginBtn:hover {
           background-color: #5a3ec8;
         }
-
         .signUpPrompt {
           font-size: 14px;
           margin-top: 20px;
           color: #4b5563;
           text-align: center;
         }
-
         .signUpLink {
           color: #7e5bef;
           text-decoration: none;

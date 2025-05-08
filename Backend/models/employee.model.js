@@ -17,11 +17,12 @@ const employeeSchema = new Schema(
       required: true,
       unique: true,  
     },
-    department: {
+    role: {
       type: String,
-      required: true, 
-    },
- 
+      enum: ['Admin', 'Employee', 'Manager'],
+      default: 'Employee',
+      required: true
+    }
     
   },
   {

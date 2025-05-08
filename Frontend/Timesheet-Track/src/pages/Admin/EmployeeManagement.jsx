@@ -8,7 +8,7 @@ const EmployeeManagement = () => {
     employee_id: '',
     name: '',
     email: '',
-    department: '',
+    role: 'employee',
   });
   const [editEmployee, setEditEmployee] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -41,7 +41,7 @@ const EmployeeManagement = () => {
 
   const handleAddEmployee = async () => {
   // Check if any field is empty
-  if (!formData.employee_id || !formData.name || !formData.email || !formData.department) {
+  if (!formData.employee_id || !formData.name || !formData.email || !formData.role) {
     setFormErrors({ general: 'All fields are required!' });
     return;
   }
@@ -70,7 +70,7 @@ const EmployeeManagement = () => {
         employee_id: '',
         name: '',
         email: '',
-        department: '',
+        role: '',
       });
       setFormErrors({});
     } else {
@@ -119,7 +119,7 @@ const EmployeeManagement = () => {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
-          department: formData.department
+          role: formData.role
         }),
       });
   
@@ -253,6 +253,17 @@ const EmployeeManagement = () => {
         .dialog-button.cancel {
           background-color: #ccc;
         }
+        .form-row select,
+        .dialog select {
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          flex: 1;
+          min-width: 180px;
+          background-color: white;
+          font-family: inherit;
+          font-size: 14px;
+        }
       `}</style>
 
       <h2>Employee Management</h2>
@@ -286,13 +297,17 @@ const EmployeeManagement = () => {
           />
         </div>
         <div style={{ flex: 1 }}>
-          <input
-            type="text"
-            name="department"
-            placeholder="Department"
-            value={formData.department}
-            onChange={handleChange}
-          />
+        
+        <select
+          name="role"
+          value={formData.role}
+          onChange={handleChange}
+        >
+          <option value="">Select Role</option>
+          <option value="Employee">Employee</option>
+          <option value="Admin">Admin</option>
+          <option value="Manager">Manager</option>
+        </select>
         </div>
         <button className="add-button" onClick={handleAddEmployee}>
           Add Employee
@@ -315,7 +330,7 @@ const EmployeeManagement = () => {
             <th>Emp ID</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Department</th>
+            <th>Role</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -326,7 +341,7 @@ const EmployeeManagement = () => {
                 <td>{emp.employee_id}</td>
                 <td>{emp.name}</td>
                 <td>{emp.email}</td>
-                <td>{emp.department}</td>
+                <td>{emp.role}</td>
                 <td>
                   <button
                     style={{ padding: '4px 10px' }}
@@ -370,13 +385,16 @@ const EmployeeManagement = () => {
           onChange={handleChange}
           className="dialog-input"
         />
-        <input
-          type="text"
-          name="department"
-          value={formData.department}
+        <select
+          name="role"
+          value={formData.role}
           onChange={handleChange}
-          className="dialog-input"
-        />
+        >
+          <option value="">Select Role</option>
+          <option value="Employee">Employee</option>
+          <option value="Admin">Admin</option>
+          <option value="Manager">Manager</option>
+        </select>
         <button className="dialog-button" onClick={handleSaveEmployee}>
           Save Changes
         </button>

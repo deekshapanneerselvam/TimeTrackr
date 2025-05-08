@@ -136,7 +136,7 @@ const Members = ({ project }) => {
             assignedEmployees.map(emp => (
               <tr key={emp.employee_id} className="hover:bg-gray-50">
                 <td className="py-2 px-4 border-b">{emp.name}</td>
-                <td className="py-2 px-4 border-b">Member</td>
+                <td className="py-2 px-4 border-b">{emp.role}</td>
                 <td className="py-2 px-4 border-b">{emp.email}</td>
               </tr>
             ))
