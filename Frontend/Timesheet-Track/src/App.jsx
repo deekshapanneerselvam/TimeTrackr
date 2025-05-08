@@ -10,6 +10,7 @@ import ManagerDashboard from './pages/Dashboard/ManagerDashboard';
 import EmployeeManagement from './pages/Admin/EmployeeManagement';
 import ProjectManagement from './pages/Admin/ProjectManagement';
 import ProjectDetails from './pages/Admin/Projects/ProjectDetails';
+import Timesheet from './pages/Employee/Timesheet';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
         </Route>
 
         <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
+        <Route path="/employee/timesheet" element={<Timesheet />} />
         <Route path="/manager" element={<ManagerDashboard />} />
         
       </Routes>
