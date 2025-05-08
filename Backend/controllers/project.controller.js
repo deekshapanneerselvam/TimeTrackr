@@ -1,5 +1,6 @@
 const Project= require('../models/project.model');
-
+const CurrentUser = require('../models/currentUser.model'); 
+const Assignment = require('../models/assignment.model');
 // controllers/projectController.js
 
 const addProject = async (req, res) => {
@@ -47,7 +48,7 @@ const getProjects = async (req, res) => {
   const getProjectById = async (req, res) => {
     try {
       const { projectId } = req.params; 
-      console.log("backend",projectId);
+      
 
       const project = await Project.findOne({ project_id: projectId });
   
@@ -60,6 +61,46 @@ const getProjects = async (req, res) => {
       res.status(500).json({ error: 'Failed to fetch project' });
     }
   };
+
+
+
+const getProjectsForEmployee = async (req, res) => {
+    try {
+      // 1. Get current logged-in user
+      const currentUser = await CurrentUser.findOne(); // Adjust based on how you're tracking sessions
+      console.log(currentUser);
+      if (!currentUser) {
+        return res.status(400).json({ message: 'No current user found' });
+      }
+  
+      const employeeId = currentUser.employee_id;
+      
+  
+      // 2. Get all assignments where employee is assigned
+      const assignments = await Assignment.find({ employee_id: employeeId });
+
+  
+      if (!assignments.length) {
+        return res.status(404).json({ message: 'No project assignments found' });
+      }
+  
+      // 3. Extract all project IDs from the assignments
+      const projectIds = assignments.map(assignment => assignment.project_id);
+  
+      // 4. Fetch full project details for those IDs
+      const projects = await Project.find({ project_id: { $in: projectIds } });
+  
+      if (!projects.length) {
+        return res.status(404).json({ message: 'No projects found for assigned IDs' });
+      }
+  
+      res.status(200).json(projects);
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching projects' });
+    }
+  };
   
   // Get employees assigned to a specific project
 
@@ -70,5 +111,6 @@ module.exports = {
   addProject,
   getProjects,
   getProjectById,
+  getProjectsForEmployee,
   
 };

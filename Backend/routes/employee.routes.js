@@ -7,8 +7,10 @@ const employeeController = require('../controllers/empController');
 router.post('/', employeeController.createEmployee);
 
 
+
 // Get all employees
 router.get('/', employeeController.getAllEmployees);
+
 
 router.delete('/:id',employeeController.deleteEmployee);
 

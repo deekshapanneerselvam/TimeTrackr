@@ -16,11 +16,14 @@ const projectSchema = new Schema(
             type:String,
             required:true,
         },
-        created_at:
-        {
+        created_at:{
             type:Date,
             required:true,
         },
+        manager:{
+            type:String,
+            required:true,
+        }
     },
     {
         timestamps:true

@@ -1,73 +1,46 @@
-// controllers/authController.js
-const bcrypt = require('bcryptjs');
-const User = require('../models/employee.model');
-
-// Register user
-exports.signup = async (req, res) => {
-  const { fullName, email, password, role } = req.body;  // Updated to use fullName
-
-  try {
-    // Check if the user already exists
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    // Create a new user
-    const newUser = new User({
-      fullName,  // Use fullName here
-      email,
-      password: hashedPassword,
-      role,
-    });
-
-    // Save the user to the database
-    await newUser.save();
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error registering user', error: error.message });
-  }
-};
-
+const Employee = require('../models/employee.model'); // Update path as needed
+const CurrentUser = require('../models/currentUser.model');
+// POST /api/auth/login
 exports.login = async (req, res) => {
   const { email, employee_id, role } = req.body;
-  console.log(req.body);
+
+  if (!email || !employee_id || !role) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
 
   try {
-    // 1. Find employee by email
-    const employee = await User.findOne({ email });
-    console.log(employee);
+    const user = await Employee.findOne({
+      email: email.trim().toLowerCase(),
+      employee_id: employee_id.trim(),
+      role: role.trim()
+    });
 
-
-    if (!employee) {
-      return res.status(400).json({ message: 'User does not exist' });
+    if (!user) {
+      return res.status(404).json({ message: 'Invalid credentials. Please check your email, ID, and role.' });
     }
 
-    // 2. Match employee_id
-    if (employee.employee_id !== employee_id) {
-      return res.status(400).json({ message: 'Incorrect Employee ID' });
-    }
+    const currentUser = await CurrentUser.findOneAndUpdate(
+      {}, // Empty filter to target the single document
+      {
+        employee_id: user.employee_id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+      { upsert: true, new: true } // Ensure the document is created if it doesn't exist, and return the updated document
+    );
 
-    // 3. Match role
-    if (employee.role.toLowerCase() !== role.toLowerCase()) {
-      return res.status(400).json({ message: `Role mismatch. You are registered as ${employee.role}` });
-    }
-
-    // 4. Login success
     return res.status(200).json({
       message: 'Login successful',
       user: {
-        id: employee._id,
-        name: employee.name,
-        email: employee.email,
-        role: employee.role,
-        employee_id: employee.employee_id,
-      },
+        employee_id: user.employee_id,
+        role: user.role,
+        name: user.name,
+        email: user.email
+      }
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Login failed', error: error.message });
+    console.error('Login error:', error);
+    return res.status(500).json({ message: 'Server error during login' });
   }
 };

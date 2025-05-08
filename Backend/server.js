@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
@@ -6,6 +7,9 @@ const PORT = 5000; // You can change the port if needed
 
 app.use(express.json()); // To parse JSON requests
 app.use(cors()); // Enable CORS
+
+
+
 
 // Connect to MongoDB (Make sure MongoDB is running or use MongoDB Atlas)
 mongoose.connect('mongodb://localhost:27017/Timesheet_Track', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -17,10 +21,12 @@ const authRoutes = require('./routes/auth');
 const empRoutes= require('./routes/employee.routes');
 const projectRoute=require('./routes/project.routes');
 const assignnmentRoute=require('./routes/assignment.routes');
+const timesheetRoute=require('./routes/timesheet.routes');
 app.use('/api/auth', authRoutes);
 app.use('/api/employee',empRoutes);
 app.use('/api/projects',projectRoute);
 app.use('/api/assignment',assignnmentRoute);
+app.use('/api/timesheets',timesheetRoute);
 
 
 app.listen(PORT, () => {
