@@ -11,6 +11,10 @@ import EmployeeManagement from './pages/Admin/EmployeeManagement';
 import ProjectManagement from './pages/Admin/ProjectManagement';
 import ProjectDetails from './pages/Admin/Projects/ProjectDetails';
 import Timesheet from './pages/Employee/Timesheet';
+import EmployeeProjects from './pages/Employee/EmployeeProjects';
+import EmployeeTimeLogStatus from './pages/Employee/EmployeeLogStatus';
+import ManagerTimeLogOverview from './pages/Manager/ManagerTimesheet';
+import ManagerTimeLogApproval from './pages/Manager/ManagerTimeLogApproval';
 export default function App() {
   return (
     <Router>
@@ -34,10 +38,15 @@ export default function App() {
 
         <Route path="/employee" element={<EmployeeDashboard />}>
           <Route path="timesheet" element={<Timesheet />} />
+          <Route path="project" element={<EmployeeProjects/>} />
+          <Route path="status" element={<EmployeeTimeLogStatus/>} />
             
         </Route>
         
-        <Route path="/manager" element={<ManagerDashboard />} />
+        <Route path="/manager" element={<ManagerDashboard />}>
+          <Route path="team-timesheet" element={<ManagerTimeLogOverview />} />
+          <Route path="approve-timesheet" element={<ManagerTimeLogApproval />} />
+        </Route>
         
       </Routes>
     </Router>
