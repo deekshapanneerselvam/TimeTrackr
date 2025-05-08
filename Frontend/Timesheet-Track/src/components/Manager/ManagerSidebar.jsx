@@ -15,7 +15,7 @@ const ManagerSidebar = () => {
 
   return (
     <aside style={styles.sidebar}>
-      <h1 style={styles.logo}>👔 Manager </h1>
+      <h1 style={styles.logo}>⏱ Manager </h1>
       <nav>
         {menuItems.map((item) => (
           <Link to={item.path} key={item.path} style={{ textDecoration: 'none' }}>

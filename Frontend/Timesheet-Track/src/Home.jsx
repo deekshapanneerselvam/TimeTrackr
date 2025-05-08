@@ -7,15 +7,10 @@ export default function Home() {
       {/* Navigation Bar */}
       <nav className="flex justify-between items-center p-4 bg-gray-100 border-b-2 border-indigo-700">
         <h1 className="text-2xl font-bold text-indigo-700">Alferix Timesheet</h1>
-        <div className="flex gap-4">
+        <div>
           <Link to="/login">
             <button className="px-4 py-2 font-semibold border-2 border-indigo-700 text-indigo-700 rounded-md transition-colors duration-300 hover:bg-indigo-700 hover:text-white">
               Login
-            </button>
-          </Link>
-          <Link to="/signup">
-            <button className="px-4 py-2 font-semibold bg-indigo-700 text-white rounded-md transition-colors duration-300 hover:bg-indigo-800">
-              Sign Up
             </button>
           </Link>
         </div>
@@ -27,18 +22,12 @@ export default function Home() {
         <p className="text-xl max-w-3xl mx-auto mb-8 text-gray-700">
           A comprehensive timesheet tracking tool for Alferix teams to log, manage, and analyze work hours.
         </p>
-        <Link to="/signup">
-          <button className="bg-indigo-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-300 hover:bg-indigo-800">
-            Start Tracking
-          </button>
-        </Link>
       </section>
 
       {/* Features Section */}
       <section className="py-16 px-8 bg-white">
         <h2 className="text-3xl text-center text-indigo-700 mb-8">Powerful Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Feature Cards */}
           <div className="bg-gray-100 p-6 rounded-xl shadow-lg transition-transform transform hover:scale-105">
             <h3 className="text-xl text-indigo-700 mb-2">Daily Logs</h3>
             <p className="text-gray-600">
