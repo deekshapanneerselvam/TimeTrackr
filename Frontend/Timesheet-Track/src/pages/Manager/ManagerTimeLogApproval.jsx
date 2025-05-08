@@ -7,7 +7,7 @@ const ManagerTimeLogApproval = () => {
   const fetchLogs = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/timelogs');
+      const response = await fetch('http://localhost:5000/api/timesheets');
       const data = await response.json();
       setLogs(data);
     } catch (error) {
@@ -23,12 +23,12 @@ const ManagerTimeLogApproval = () => {
 
   const updateStatus = async (logId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/timelogs/${logId}/status`, {
+      const response = await fetch(`http://localhost:5000/api/timesheets/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ status: newStatus,logId }),
       });
 
       if (response.ok) {
@@ -67,8 +67,8 @@ const ManagerTimeLogApproval = () => {
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="py-2 px-4 border-b">{log.employee_name || log.employee_email}</td>
                     <td className="py-2 px-4 border-b">{log.date}</td>
-                    <td className="py-2 px-4 border-b">{log.project_name}</td>
-                    <td className="py-2 px-4 border-b">{log.task_name}</td>
+                    <td className="py-2 px-4 border-b">{log.project_id}</td>
+                    <td className="py-2 px-4 border-b">{log.task}</td>
                     <td className="py-2 px-4 border-b">{log.duration}</td>
                     <td className="py-2 px-4 border-b">
                       <span
@@ -80,7 +80,7 @@ const ManagerTimeLogApproval = () => {
                             : 'bg-yellow-100 text-yellow-700'
                         }`}
                       >
-                        {log.status || 'Pending'}
+                        {log.status}
                       </span>
                     </td>
                     <td className="py-2 px-4 border-b space-x-2">

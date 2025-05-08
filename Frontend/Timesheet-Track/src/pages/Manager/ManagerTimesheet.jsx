@@ -8,7 +8,7 @@ const ManagerTimeLogOverview = () => {
     const fetchAllLogs = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:5000/api/timelogs'); // Replace with your endpoint
+        const response = await fetch('http://localhost:5000/api/timesheets/manager'); // Replace with your endpoint
         const data = await response.json();
         setLogs(data);
       } catch (error) {
@@ -47,10 +47,10 @@ const ManagerTimeLogOverview = () => {
               {logs.length > 0 ? (
                 logs.map((log, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                    <td className="py-2 px-4 border-b">{log.employee_name || log.employee_email}</td>
+                    <td className="py-2 px-4 border-b">{log.employee_name}</td>
                     <td className="py-2 px-4 border-b">{log.date}</td>
-                    <td className="py-2 px-4 border-b">{log.project_name}</td>
-                    <td className="py-2 px-4 border-b">{log.task_name}</td>
+                    <td className="py-2 px-4 border-b">{log.project_id}</td>
+                    <td className="py-2 px-4 border-b">{log.task}</td>
                     <td className="py-2 px-4 border-b">{log.description || '—'}</td>
                     <td className="py-2 px-4 border-b">{log.start_time}</td>
                     <td className="py-2 px-4 border-b">{log.end_time}</td>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const EmployeeProjects = ({ employeeId }) => {
+const EmployeeProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -8,7 +8,7 @@ const EmployeeProjects = ({ employeeId }) => {
     const fetchProjects = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:5000/api/projects/employee/${employeeId}`);
+        const response = await fetch(`http://localhost:5000/api/projects/assigned-proj`);
         const data = await response.json();
         setProjects(data);
       } catch (err) {
@@ -19,7 +19,7 @@ const EmployeeProjects = ({ employeeId }) => {
     };
 
     fetchProjects();
-  }, [employeeId]);
+  }, []);
 
   return (
     <div>
@@ -43,8 +43,8 @@ const EmployeeProjects = ({ employeeId }) => {
               projects.map(project => (
                 <tr key={project.project_id} className="hover:bg-gray-50">
                   <td className="py-2 px-4 border-b">{project.project_name}</td>
-                  <td className="py-2 px-4 border-b">{project.role}</td>
-                  <td className="py-2 px-4 border-b">{project.start_date}</td>
+                  <td className="py-2 px-4 border-b">{project.client}</td>
+                  <td className="py-2 px-4 border-b">{new Date(project.created_at).toLocaleDateString()}</td>
                   <td className="py-2 px-4 border-b">{project.status}</td>
                   <td className="py-2 px-4 border-b">{project.manager}</td>
                 </tr>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const EmployeeTimeLogStatus = ({ employeeId }) => {
+const EmployeeTimeLogStatus = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -8,7 +8,7 @@ const EmployeeTimeLogStatus = ({ employeeId }) => {
     const fetchLogs = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:5000/api/timelogs/employee/${employeeId}`);
+        const response = await fetch(`http://localhost:5000/api/timesheets`);
         const data = await response.json();
         setLogs(data);
       } catch (error) {
@@ -19,7 +19,7 @@ const EmployeeTimeLogStatus = ({ employeeId }) => {
     };
 
     fetchLogs();
-  }, [employeeId]);
+  }, []);
 
   return (
     <div className="mt-6">
@@ -46,9 +46,9 @@ const EmployeeTimeLogStatus = ({ employeeId }) => {
               {logs.length > 0 ? (
                 logs.map((log, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                    <td className="py-2 px-4 border-b">{log.date}</td>
-                    <td className="py-2 px-4 border-b">{log.project_name}</td>
-                    <td className="py-2 px-4 border-b">{log.task_name}</td>
+                    <td className="py-2 px-4 border-b"> {new Date(log.date).toLocaleDateString()}</td>
+                    <td className="py-2 px-4 border-b">{log.project_id}</td>
+                    <td className="py-2 px-4 border-b">{log.task}</td>
                     <td className="py-2 px-4 border-b">{log.description || '—'}</td>
                     <td className="py-2 px-4 border-b">{log.start_time}</td>
                     <td className="py-2 px-4 border-b">{log.end_time}</td>
