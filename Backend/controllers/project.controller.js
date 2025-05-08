@@ -61,6 +61,8 @@ const getProjects = async (req, res) => {
     }
   };
   
+  // Get employees assigned to a specific project
+
 
   
 
@@ -68,4 +70,5 @@ module.exports = {
   addProject,
   getProjects,
   getProjectById,
+  
 };

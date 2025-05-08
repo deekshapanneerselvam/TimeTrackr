@@ -31,7 +31,7 @@ export default function LoginPage() {
       // Role-based redirection
       const trimmedRole = role.trim().toLowerCase();
       if (trimmedRole === 'employee') {
-        navigate('/employee-dashboard');
+        navigate('/employee');
       } else if (trimmedRole === 'manager') {
         navigate('/manager');
       } else if (trimmedRole === 'admin') {

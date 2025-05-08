@@ -11,7 +11,6 @@ import EmployeeManagement from './pages/Admin/EmployeeManagement';
 import ProjectManagement from './pages/Admin/ProjectManagement';
 import ProjectDetails from './pages/Admin/Projects/ProjectDetails';
 import Timesheet from './pages/Employee/Timesheet';
-
 export default function App() {
   return (
     <Router>
@@ -24,6 +23,7 @@ export default function App() {
           <Route path="employees" element={<EmployeeManagement />} />
           <Route path="project" element={<ProjectManagement />} />
           <Route path="project/:projectId" element={<ProjectDetails />} />
+          
           {/*<Route path="timesheet" element={<Timesheet />} />
           
           
@@ -32,8 +32,11 @@ export default function App() {
           <Route path="profile" element={<Profile />} />*/}
         </Route>
 
-        <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
-        <Route path="/employee/timesheet" element={<Timesheet />} />
+        <Route path="/employee" element={<EmployeeDashboard />}>
+          <Route path="timesheet" element={<Timesheet />} />
+            
+        </Route>
+        
         <Route path="/manager" element={<ManagerDashboard />} />
         
       </Routes>

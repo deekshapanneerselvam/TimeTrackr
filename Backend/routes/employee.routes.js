@@ -5,7 +5,7 @@ const employeeController = require('../controllers/empController');
 
 // Add a new employee
 router.post('/', employeeController.createEmployee);
-router.post('/:employeeId/assign',employeeController.assignProjectToEmployee);
+
 
 // Get all employees
 router.get('/', employeeController.getAllEmployees);

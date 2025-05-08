@@ -1,49 +1,64 @@
 import React, { useState, useEffect } from 'react';
 
 const Members = ({ project }) => {
-  const { project_id: projectId, project_name: projectName } = project;
+  const { project_id, project_name } = project;
+
   const [openDialog, setOpenDialog] = useState(false);
   const [employees, setEmployees] = useState([]);
+  const [assignedEmployees, setAssignedEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [assignedEmployees, setAssignedEmployees] = useState([]); // Track assigned employees
 
-  // Fetch employees when the dialog is opened
+  // Fetch employees and assigned employees as soon as the component loads
   useEffect(() => {
-    if (openDialog) {
-      const fetchEmployees = async () => {
-        setLoading(true);
-        try {
-          const response = await fetch('http://localhost:5000/api/employee');
-          const data = await response.json();
-          setEmployees(data);
-        } catch (err) {
-          console.error('Error fetching employees:', err);
-        } finally {
-          setLoading(false);
-        }
-      };
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [empRes, assignedRes] = await Promise.all([
+          fetch('http://localhost:5000/api/employee'),
+          fetch(`http://localhost:5000/api/assignment/project/${project_id}`)
+        ]);
 
-      fetchEmployees();
-    }
-  }, [openDialog]);
+        const empData = await empRes.json();
+        const assignedData = await assignedRes.json();
 
-  // Assign the current project to an employee
-  const assignProjectToEmployee = async (employeeId) => {
+        setEmployees(empData);
+
+        // Map assigned employees with full employee details
+        const assignedEmpDetails = assignedData.map(a => {
+          const employee = empData.find(emp => emp.employee_id === a.employee_id);
+          return employee ? employee : null;
+        }).filter(emp => emp !== null);
+
+        setAssignedEmployees(assignedEmpDetails);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [project_id]); // Only fetch data when project_id changes
+
+  const assignEmployeeToProject = async (employeeId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/employee/${employeeId}/assign`, {
+      const response = await fetch('http://localhost:5000/api/assignment', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ projectId, projectName }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          employee_id: employeeId,
+          project_id: project_id,
+          project_name: project_name,
+        })
       });
 
       const data = await response.json();
       if (data.success) {
-        alert('Project assigned successfully');
-        setAssignedEmployees((prev) => [...prev, employeeId]); // Mark as assigned
+        alert('Assigned successfully');
+        const newEmployee = employees.find(emp => emp.employee_id === employeeId);
+        setAssignedEmployees(prev => [...prev, newEmployee]);
       } else {
-        console.error('Failed to assign project');
+        alert(data.message || 'Failed to assign');
       }
     } catch (err) {
       console.error('Error assigning project:', err);
@@ -52,20 +67,16 @@ const Members = ({ project }) => {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
-        <input
-          type="text"
-          placeholder="Search members..."
-          className="border rounded px-4 py-2 w-1/2"
-        />
+      <div className="flex items-end mb-4">
         <button
           onClick={() => setOpenDialog(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-blue-600 text-white px-4 py-2  rounded hover:bg-blue-700 ml-auto"
         >
           + Assign User
         </button>
       </div>
 
+      {/* Assign Member Dialog */}
       {openDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded shadow-lg w-[90%] max-w-md">
@@ -74,21 +85,19 @@ const Members = ({ project }) => {
             {loading ? (
               <p>Loading employees...</p>
             ) : (
-              <ul className="space-y-4">
+              <ul className="space-y-4 max-h-72 overflow-y-auto">
                 {employees.length > 0 ? (
-                  employees.map((employee) => {
-                    const isAssigned = assignedEmployees.includes(employee.employee_id);
+                  employees.map(employee => {
+                    const isAssigned = assignedEmployees.some(
+                      assigned => assigned.employee_id === employee.employee_id
+                    );
                     return (
                       <li key={employee.employee_id} className="flex justify-between items-center">
                         <span>{employee.name}</span>
                         <button
-                          className={`px-2 py-1 rounded ${
-                            isAssigned
-                              ? 'bg-green-500 cursor-default'
-                              : 'bg-blue-500 hover:bg-blue-600'
-                          } text-white`}
+                          className={`px-2 py-1 rounded ${isAssigned ? 'bg-green-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
                           disabled={isAssigned}
-                          onClick={() => !isAssigned && assignProjectToEmployee(employee.employee_id)}
+                          onClick={() => !isAssigned && assignEmployeeToProject(employee.employee_id)}
                         >
                           {isAssigned ? 'Assigned' : 'Assign'}
                         </button>
@@ -113,6 +122,7 @@ const Members = ({ project }) => {
         </div>
       )}
 
+      {/* Table of Assigned Members */}
       <table className="w-full border mt-4">
         <thead className="bg-gray-100">
           <tr>
@@ -122,11 +132,19 @@ const Members = ({ project }) => {
           </tr>
         </thead>
         <tbody>
-          <tr className="hover:bg-gray-50">
-            <td className="py-2 px-4 border-b">John Doe</td>
-            <td className="py-2 px-4 border-b">Developer</td>
-            <td className="py-2 px-4 border-b">john@example.com</td>
-          </tr>
+          {assignedEmployees.length > 0 ? (
+            assignedEmployees.map(emp => (
+              <tr key={emp.employee_id} className="hover:bg-gray-50">
+                <td className="py-2 px-4 border-b">{emp.name}</td>
+                <td className="py-2 px-4 border-b">Member</td>
+                <td className="py-2 px-4 border-b">{emp.email}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3" className="py-2 px-4 border-b text-center">No members assigned yet</td>
+            </tr>
+          )}
         </tbody>
       </table>
     </>

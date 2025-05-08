@@ -7,4 +7,5 @@ const projectController=require('../controllers/project.controller');
 router.post('/', projectController.addProject);
 router.get('/', projectController.getProjects);
 router.get('/:projectId',projectController.getProjectById);
+
 module.exports = router;
