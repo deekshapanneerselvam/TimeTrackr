@@ -89,50 +89,150 @@ exports.updateStatus = async (req, res) => {
 
 
 
-exports.analysis=async (req, res) => {
+
+
+exports.getTimesheetAnalysis = async (req, res) => {
   try {
+    // Total hours by employee
     const totalHoursByEmployee = await Timesheet.aggregate([
       {
+        $addFields: {
+          // Split the duration string "HH:MM" into hours and minutes
+          durationInHours: {
+            $add: [
+              {
+                $toDouble: {
+                  $arrayElemAt: [{ $split: ["$duration", ":"] }, 0] // Extract hours
+                }
+              },
+              {
+                $divide: [
+                  {
+                    $toDouble: {
+                      $arrayElemAt: [{ $split: ["$duration", ":"] }, 1] // Extract minutes
+                    }
+                  },
+                  60 // Convert minutes to hours
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
         $group: {
-          _id: '$employee_id',
-          totalDuration: { $sum: '$duration' }
+          _id: "$employee_id",
+          totalDuration: { $sum: "$durationInHours" }
         }
       }
     ]);
 
+    // Hours by project
     const hoursByProject = await Timesheet.aggregate([
       {
+        $addFields: {
+          durationInHours: {
+            $add: [
+              {
+                $toDouble: {
+                  $arrayElemAt: [{ $split: ["$duration", ":"] }, 0] // Extract hours
+                }
+              },
+              {
+                $divide: [
+                  {
+                    $toDouble: {
+                      $arrayElemAt: [{ $split: ["$duration", ":"] }, 1] // Extract minutes
+                    }
+                  },
+                  60 // Convert minutes to hours
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
         $group: {
-          _id: '$project_id',
-          totalDuration: { $sum: '$duration' }
+          _id: "$project_id",
+          totalDuration: { $sum: "$durationInHours" }
         }
       }
     ]);
 
+    // Daily time trends
     const dailyTrends = await Timesheet.aggregate([
       {
+        $addFields: {
+          durationInHours: {
+            $add: [
+              {
+                $toDouble: {
+                  $arrayElemAt: [{ $split: ["$duration", ":"] }, 0] // Extract hours
+                }
+              },
+              {
+                $divide: [
+                  {
+                    $toDouble: {
+                      $arrayElemAt: [{ $split: ["$duration", ":"] }, 1] // Extract minutes
+                    }
+                  },
+                  60 // Convert minutes to hours
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
         $group: {
-          _id: { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
-          totalDuration: { $sum: '$duration' }
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+          totalDuration: { $sum: "$durationInHours" }
         }
       },
       { $sort: { _id: 1 } }
     ]);
 
+    // Status summary
     const statusSummary = await Timesheet.aggregate([
       {
         $group: {
-          _id: '$status',
+          _id: "$status",
           count: { $sum: 1 }
         }
       }
     ]);
 
+    // Top 5 employees by hours
     const topEmployees = await Timesheet.aggregate([
       {
+        $addFields: {
+          durationInHours: {
+            $add: [
+              {
+                $toDouble: {
+                  $arrayElemAt: [{ $split: ["$duration", ":"] }, 0] // Extract hours
+                }
+              },
+              {
+                $divide: [
+                  {
+                    $toDouble: {
+                      $arrayElemAt: [{ $split: ["$duration", ":"] }, 1] // Extract minutes
+                    }
+                  },
+                  60 // Convert minutes to hours
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
         $group: {
-          _id: '$employee_id',
-          totalDuration: { $sum: '$duration' }
+          _id: "$employee_id",
+          totalDuration: { $sum: "$durationInHours" }
         }
       },
       { $sort: { totalDuration: -1 } },
@@ -146,9 +246,8 @@ exports.analysis=async (req, res) => {
       statusSummary,
       topEmployees
     });
-  } catch (error) {
-    console.error('Analytics fetch error:', error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Error fetching analytics data' });
   }
 };
-

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, Legend, ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, Legend, ResponsiveContainer
 } from 'recharts';
 
 const COLORS = ['#6366F1', '#10B981', '#F59E0B', '#EF4444', '#3B82F6'];
@@ -24,7 +24,6 @@ const AdminAnalysis = () => {
 
   if (!analytics) return <p>Loading analytics...</p>;
 
-  // Format data
   const employeeData = analytics.totalHoursByEmployee.map((e) => ({
     name: `Emp ${e._id.slice(-4)}`,
     hours: e.totalDuration,
@@ -51,12 +50,13 @@ const AdminAnalysis = () => {
     hours: e.totalDuration,
   }));
 
+  
+
   return (
     <div style={styles.container}>
       <h2 style={styles.header}>📊 Admin Analytics Dashboard</h2>
 
       <div style={styles.chartGrid}>
-        {/* Total Hours by Employee */}
         <div style={styles.chartBox}>
           <h3>Total Hours by Employee</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -70,7 +70,6 @@ const AdminAnalysis = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Hours by Project */}
         <div style={styles.chartBox}>
           <h3>Hours by Project</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -84,7 +83,6 @@ const AdminAnalysis = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Daily Time Trends */}
         <div style={styles.chartBox}>
           <h3>Daily Trends</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -98,7 +96,6 @@ const AdminAnalysis = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Status Summary Pie */}
         <div style={styles.chartBox}>
           <h3>Status Summary</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -121,7 +118,6 @@ const AdminAnalysis = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Top Employees */}
         <div style={styles.chartBox}>
           <h3>Top 5 Employees</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -134,6 +130,9 @@ const AdminAnalysis = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
+
+        {/* New: Breakdown by Project and Employee */}
+        
       </div>
     </div>
   );

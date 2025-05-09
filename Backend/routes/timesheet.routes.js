@@ -5,7 +5,7 @@ const {
   getTimesheets,
   getAllTimeSheets,
   updateStatus,
-  analysis
+  analysis,getTimesheetAnalysis
   
 } = require('../controllers/timesheet.controller');
 
@@ -19,6 +19,6 @@ router.get('/manager',getAllTimeSheets);
 
 router.put('/status',updateStatus);
 
-router.get('/analysis',analysis);
+router.get('/analysis',getTimesheetAnalysis);
 
 module.exports = router;
