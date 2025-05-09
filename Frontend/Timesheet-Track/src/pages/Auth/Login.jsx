@@ -28,11 +28,11 @@ export default function LoginPage() {
 
       const trimmedRole = user.role.trim().toLowerCase();
       if (trimmedRole === 'employee') {
-        navigate('/employee');
+        navigate('/employee/timesheet');
       } else if (trimmedRole === 'manager') {
-        navigate('/manager');
+        navigate('/manager/team-timesheet');
       } else if (trimmedRole === 'admin') {
-        navigate('/admin');
+        navigate('/admin/analysis');
       }
     } catch (error) {
       alert(error.response?.data?.message || 'Login failed. Please try again.');
@@ -81,12 +81,7 @@ export default function LoginPage() {
           <button type="submit" className="loginBtn">Login</button>
         </form>
 
-        <p className="signUpPrompt">
-          Don’t have an account?{' '}
-          <Link to="/signup" className="signUpLink">
-            Register here
-          </Link>
-        </p>
+        
       </div>
 
       <style>{`

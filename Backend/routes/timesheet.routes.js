@@ -4,7 +4,9 @@ const {
   createTimesheet,
   getTimesheets,
   getAllTimeSheets,
-  updateStatus
+  updateStatus,
+  analysis
+  
 } = require('../controllers/timesheet.controller');
 
 // POST: Add timesheet entry
@@ -16,5 +18,7 @@ router.get('/', getTimesheets);
 router.get('/manager',getAllTimeSheets);
 
 router.put('/status',updateStatus);
+
+router.get('/analysis',analysis);
 
 module.exports = router;

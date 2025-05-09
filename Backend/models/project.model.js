@@ -20,10 +20,7 @@ const projectSchema = new Schema(
             type:Date,
             required:true,
         },
-        manager:{
-            type:String,
-            required:true,
-        }
+        
     },
     {
         timestamps:true

@@ -10,7 +10,7 @@ const ManagerSidebar = () => {
     { icon: <FaUsers />, label: 'Team Timesheet', path: '/manager/team-timesheet' },
     { icon: <FaCheckCircle />, label: 'Approve Timesheet', path: '/manager/approve-timesheet' },
     { icon: <FaChartBar />, label: 'View Report', path: '/manager/view-report' },
-    { icon: <FaUserCircle />, label: 'Profile', path: '/manager/profile' },
+
   ];
 
   return (

@@ -9,7 +9,7 @@ const EmployeeSidebar = () => {
     { icon: <FaClock />, label: 'Timesheet', path: '/employee/timesheet' },
     { icon: <FaProjectDiagram />, label: 'Project', path: '/employee/project' },
     { icon: <FaTasks />, label: 'Status', path: '/employee/status' },
-    { icon: <FaUserCircle />, label: 'Profile', path: '/employee/profile' },
+  
   ];
 
   return (

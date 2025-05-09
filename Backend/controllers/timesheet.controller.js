@@ -86,3 +86,69 @@ exports.updateStatus = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   };
+
+
+
+exports.analysis=async (req, res) => {
+  try {
+    const totalHoursByEmployee = await Timesheet.aggregate([
+      {
+        $group: {
+          _id: '$employee_id',
+          totalDuration: { $sum: '$duration' }
+        }
+      }
+    ]);
+
+    const hoursByProject = await Timesheet.aggregate([
+      {
+        $group: {
+          _id: '$project_id',
+          totalDuration: { $sum: '$duration' }
+        }
+      }
+    ]);
+
+    const dailyTrends = await Timesheet.aggregate([
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
+          totalDuration: { $sum: '$duration' }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    const statusSummary = await Timesheet.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const topEmployees = await Timesheet.aggregate([
+      {
+        $group: {
+          _id: '$employee_id',
+          totalDuration: { $sum: '$duration' }
+        }
+      },
+      { $sort: { totalDuration: -1 } },
+      { $limit: 5 }
+    ]);
+
+    res.json({
+      totalHoursByEmployee,
+      hoursByProject,
+      dailyTrends,
+      statusSummary,
+      topEmployees
+    });
+  } catch (error) {
+    console.error('Analytics fetch error:', error);
+    res.status(500).json({ message: 'Error fetching analytics data' });
+  }
+};
+

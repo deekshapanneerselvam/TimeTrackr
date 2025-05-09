@@ -1,7 +1,7 @@
 // src/components/Sidebar.jsx
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaClock, FaUserTie, FaTasks, FaFileAlt, FaUserCircle } from 'react-icons/fa';
+import { FaClock, FaUserTie, FaFileAlt, FaUserCircle } from 'react-icons/fa';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -10,9 +10,7 @@ const Sidebar = () => {
     { icon: <FaClock />, label: 'Timesheet', path: '/admin/timesheet' },
     { icon: <FaUserTie />, label: 'Employees', path: '/admin/employees' },
     { icon: <FaUserCircle />, label: 'Project', path: '/admin/project' },
-    { icon: <FaTasks />, label: 'Tasks', path: '/admin/tasks' },
     { icon: <FaFileAlt />, label: 'Reports', path: '/admin/reports' },
-    { icon: <FaUserCircle />, label: 'Profile', path: '/admin/profile' },
   ];
 
   return (
